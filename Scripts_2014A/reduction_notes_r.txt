@@ -219,5 +219,5 @@ Step 14: Run SExtractor on the final coadd, using a filter-specific config file
 
 ipython
 import astromatic as astrom
-astrom.make_cat_suprimecam('0435_scam_mar14_r.fits','0435_scam_mar14_r.cat','0435_scam_mar14_r.reg',weight_file='0435_scam_mar14_r_wht.fits',
+astrom.make_cat_suprimecam('0435_scam_mar14_r.fits','0435_scam_mar14_r.cat','0435_scam_mar14_r.reg',weight_file='0435_scam_mar14_r_wht.fits',zeropt=27.685)
 
