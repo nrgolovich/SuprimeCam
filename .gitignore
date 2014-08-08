@@ -1,0 +1,10 @@
+# emacs backups
+*~
+
+# python extensions
+*.py[cod]
+
+# C extensions and associated files
+*.so
+*.o
+
