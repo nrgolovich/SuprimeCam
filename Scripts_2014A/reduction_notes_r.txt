@@ -196,7 +196,7 @@ Download the SDSS star magnitudes (ugriz), do some slight editing and put
 Find the offset between the SuprimeCam data (assumed ZP=30.0) and the true
  magnitudes:
 
-ipython
+ipython -pylab
 import matchcat as mc
 scamcat,sdsscat = mc.find_match('0924_scam_mar14_r.cat','0924_sdss_star_mags.txt',0.5,catformat1='ldac',racol2=0,deccol2=1)
 mag_scam = scamcat.data['mag_auto'][scamcat.mask]
