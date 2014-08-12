@@ -378,4 +378,24 @@ def make_wht_for_final(infiles, medfile, nsig, inwht_suff='.weight.fits',
     #medwhthdu.close()
     del medall,medwhtall
 
+#---------------------------------------------------------------------------
 
+def add_exptime(inlist, exptime, hext=0, verbose=True):
+    """
+    Given a list of fits files, adds to each one an EXPTIME header keyword
+    with a value given by the passed exptime parameter
+
+    Inputs:
+       inlist  - list of fits files to which the keyword will be added
+       exptime - the value of the exposure time to add to each file
+       hext    - HDU to modify (default = 0)
+       verbose - Set to True (the default) for some status
+    """
+
+    for i in inlist:
+        hdu = pf.open(i,mode='update')
+        hdr = hdu[hext].header
+        hdr.update('exptime',exptime)
+        hdu.flush()
+        if verbose:
+            print 'Updated %s with EXPTIME=%.2f' % (i,exptime)
