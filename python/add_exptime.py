@@ -16,7 +16,7 @@ if len(sys.argv) < 2:
     print ''
     exit()
 
-exptime = float(argv[1])
+exptime = float(sys.argv[1])
 inlist = glob.glob('*resamp.fits')
 
 scam.add_exptime(inlist,exptime)
