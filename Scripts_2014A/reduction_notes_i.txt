@@ -1,0 +1,217 @@
+## 2014-03-03
+
+Step 1: Collect files
+---------------------
+Make symbolic links from the Reduc/[source]_i and Reduc/[source]_i_shortexp
+directories to the appropriate files in the Raw/[source] directories.  
+
+A summary of the i-band files for the four sources are below.
+
+HE0435
+------
+ t_exp      Start        End
+ -----  ------------ ------------
+   3    SUPA01448700 SUPA01448709
+  30    SUPA01448710 SUPA01448719
+ 120    SUPA01448720 SUPA01448769
+
+HE1104
+------
+ t_exp      Start        End
+ -----  ------------ ------------
+   3    SUPA01449410 SUPA01449419
+  30    SUPA01449420 SUPA01449429
+ 120    SUPA01449430 SUPA01449479
+
+RXJ1131
+-------
+ t_exp      Start        End
+ -----  ------------ ------------
+   3    SUPA01449480 SUPA01449489
+  30    SUPA01449490 SUPA01449499
+ 120    SUPA01449500 SUPA01449549
+
+B1608
+-----
+ t_exp      Start        End
+ -----  ------------ ------------
+   3    SUPA01449570 SUPA01449579
+  30    SUPA01449580 SUPA01449589
+ 120    SUPA01449590 SUPA01449639
+
+--------------------------------------------------
+
+Step 2: Change naming scheme to prepare for SDFRED2 reducton
+
+ls SUPA*fits > namechange.in
+namechange.csh namechange.in
+
+--------------------------------------------------
+
+Step 3: Overscan and bias subtraction
+
+ls H*fits > overscan.in
+overscansub.csh overscan.in
+
+--------------------------------------------------
+
+Step 4: Make a flat field
+
+Try doing this with the data themselves.  Create a Skyflat_i directory
+and in in make links to all of the overscan-subtracted files for the
+four targets.  Then run the flat-field generating script.
+
+cd Skyflat_i
+ln -s ../HE0435_i/To_RH*fits .
+ln -s ../HE1104_i/To_RH*fits .
+ln -s ../RXJ1131_i/To_RH*fits .
+ln -s ../B1608_i/To_RH*fits .
+ls To_RH*fits > skyflat_i.in
+mask_mkflat_HA.csh skyflat_i.in skyflat_i 0.4 1.3
+
+--------------------------------------------------
+
+Step 5: Apply flat-field correction
+
+Go to the source directory
+
+ls ../../Skyflat_i/skyflat_i*fits > skyflat_i.list
+ls To*fits > ffield.in
+ffield.csh skyflat_i.list ffield.in
+
+--------------------------------------------------
+
+Step 6: Distortion correction
+
+ls fTo*fits > distcorr.in
+distcorr.csh distcorr.in
+
+--------------------------------------------------
+
+Step 7: Mask the AG Shade
+
+ls gfTo*fits > mask_AGX.in
+mask_AGX.csh mask_AGX.in
+
+---------------------------------------------------------------------------
+
+*** END OF SDFRED REDUCTION ***
+
+---------------------------------------------------------------------------
+
+--------------------------------------------------
+
+Step 8: Run SExtractor on the files
+
+cd ../Coadd
+ln -s ../../sext_astfile.param .
+ln -s ../../sext_suprimecam.config .
+ln -s ../../scamp_suprimecam.config .
+ln -s ../../swarp_suprimecam_1.config .
+ln -s ../../swarp_suprimecam_2.config .
+python ../../rename_before_swarp.py
+ls object*.fits | grep -v weight | xargs -I {} -P 6 python ../../run_sext_suprimecam.py {}
+
+--------------------------------------------------
+
+Step 9: Run scamp on the files, using 2MASS reference frame
+
+scamp object*cat -c scamp_suprimecam.config
+ls object*fits > good_object_pass1.txt
+[Edit out any objects that had red lines in the scamp output]
+
+--------------------------------------------------
+
+Step 10: Make the initial weight files for the initial coaddition
+
+python ../../make_wht_for_swarp_1.py
+
+--------------------------------------------------
+
+Step 10: Run the initial swarp to create a median-stacked coadd file
+Even at this stage, set the center, pixel scale, and output image size,
+which will be lens-dependent.
+
+#Example for 0435
+ln -s ../../swarp_0435_1.config .
+ln -s ../../swarp_0435_2.config .
+swarp @good_object_pass1.txt -c swarp_0435_1.config
+
+# Generic version:
+#  swarp @good_object_pass1.txt -c swarp_scam_1.config
+
+--------------------------------------------------
+
+Step 11: Make the updated weight maps
+
+*** NB: The FLXSCAL paramter produced by scamp does the following:
+ 1. Converts the units of the output swarped file into counts/sec
+ 2. Adjusts the flux levels by an additional small amount to optimize the
+    flux match between the images.
+
+# Note: The sigma clipping level has to be chosen.  For now, go with nsig=3.
+#  (the last argument on the line below) 
+
+python ../../make_wht_for_swarp_2.py swarp_median.fits 3.
+
+--------------------------------------------------
+
+Step 12: Do the penultimate coadd, with a lens-based config file that is 
+slightly different from the one in step 10.  The differences are two-fold:
+  1. COMBINE_TYPE is now WEIGHTED and RESAMPLE is now N
+     (These changes are reflected in swarp_scam_2.config)
+  2. The center, pixel size, and number of pixels is now set for each lens
+     system
+
+# Example for HE0435 data
+swarp *resamp.fits -c swarp_0435_2.config -IMAGEOUT_NAME 0435_scam_mar14_i.fits -WEIGHTOUT_NAME 0435_scam_mar14_i_wht.fits
+
+--------------------------------------------------
+
+Step 13: Get the photometric zero point
+
+Re-run steps 1-12 above on the SDSS 0924 r-band data, but just use 
+swarp_scam_2.config in step 12 rather than a custom file
+
+Run SExtractor on the output file:
+ ipython
+ import astromatic as astrom
+  astrom.make_cat_suprimecam('0924_scam_mar14_i.fits','0924_scam_mar14_i.cat','0924_scam_mar14_i.reg',weight_file='0924_scam_mar14_i_wht.fits')
+
+Go to the SDSS server and select stars within 20 arcmin of the lens system.
+
+Download the SDSS star magnitudes (ugriz), do some slight editing and put 
+ the results into a text file: 0924_sdss_mags.txt
+
+Find the offset between the SuprimeCam data (assumed ZP=30.0) and the true
+ magnitudes:
+
+ipython
+import matchcat as mc
+scamcat,sdsscat = mc.find_match('0924_scam_mar14_i.cat','0924_sdss_star_mags.txt',0.5,catformat1='ldac',racol2=0,deccol2=1)
+figure(3)
+mc.color_mag(scamcat,sdsscat,'mag_auto','f5','mag_scam','mag_sdss')
+
+mag_scam = scamcat.data['mag_auto'][scamcat.mask]
+mag_sdss = sdsscat.data['f3'][sdsscat.mask] # r-band is column 4
+mag_diff = mag_scam - mag_sdss
+figure(3)
+plot(mag_scam,mag_diff,'bo')
+xlim(12,26)
+ylim(0,4.5)
+figure(4)
+diffgood = mag_diff[(mag_scam>16.) & (mag_scam<23.) & (mag_diff>1.5) & (mag_diff<3.)]
+hist(diffgood,bins=20)
+
+Mean and median of diffgood are within 0.008 mags.  Take average of those
+to get ZP offset = 2.445
+==> proper ZP = 27.555
+
+--------------------------------------------------
+
+Step 14: Run SExtractor on the final coadd, using a filter-specific config file
+
+ipython
+import astromatic as astrom
+astrom.make_cat_suprimecam('0435_scam_mar14_i.fits','0435_scam_mar14_i.cat','0435_scam_mar14_i.reg',weight_file='0435_scam_mar14_i_wht.fits',zeropt=27.358)
+
