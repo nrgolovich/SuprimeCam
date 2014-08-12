@@ -110,7 +110,7 @@ ln -s ../../scamp_scam.config .
 ln -s ../../swarp_scam_1.config .
 ln -s ../../swarp_scam_2.config .
 python ../../rename_before_swarp.py
-ls object*.fits | grep -v weight | xargs -I {} -P 6 python ../../run_sext_scam.py {}
+ls object*.fits | grep -v weight | xargs -I {} -P 6 python ../../run_sext_scam_1.py {}
 
 --------------------------------------------------
 
@@ -156,7 +156,13 @@ python ../../make_wht_for_swarp_2.py swarp_median.fits 3.
 
 --------------------------------------------------
 
-Step 13: Do the penultimate coadd, with a lens-based config file that is 
+Step 13: Put the exposure time back into the individual resampled files
+
+python ../../add_exptime.py 120
+
+--------------------------------------------------
+
+Step 14: Do the penultimate coadd, with a lens-based config file that is 
 slightly different from the one in step 10.  The differences are two-fold:
   1. COMBINE_TYPE is now WEIGHTED and RESAMPLE is now N
      (These changes are reflected in swarp_scam_2.config)
@@ -168,7 +174,7 @@ swarp *resamp.fits -c swarp_0435_2.config -IMAGEOUT_NAME 0435_scam_mar14_i.fits 
 
 --------------------------------------------------
 
-Step 14: Get the photometric zero point
+Step 15: Get the photometric zero point
 
 Re-run steps 1-12 above on the SDSS 0924 r-band data, but just use 
 swarp_scam_2.config in step 12 rather than a custom file
@@ -209,7 +215,7 @@ to get ZP offset = 2.445
 
 --------------------------------------------------
 
-Step 15: Run SExtractor on the final coadd, using a filter-specific config file
+Step 16: Run SExtractor on the final coadd, using a filter-specific config file
 
 ipython
 import astromatic as astrom
