@@ -105,18 +105,18 @@ Step 8: Run SExtractor on the files
 
 cd ../Coadd
 ln -s ../../sext_astfile.param .
-ln -s ../../sext_suprimecam.config .
-ln -s ../../scamp_suprimecam.config .
-ln -s ../../swarp_suprimecam_1.config .
-ln -s ../../swarp_suprimecam_2.config .
+ln -s ../../sext_scam.config .
+ln -s ../../scamp_scam.config .
+ln -s ../../swarp_scam_1.config .
+ln -s ../../swarp_scam_2.config .
 python ../../rename_before_swarp.py
-ls object*.fits | grep -v weight | xargs -I {} -P 6 python ../../run_sext_suprimecam.py {}
+ls object*.fits | grep -v weight | xargs -I {} -P 6 python ../../run_sext_scam.py {}
 
 --------------------------------------------------
 
 Step 9: Run scamp on the files, using 2MASS reference frame
 
-scamp object*cat -c scamp_suprimecam.config
+scamp object*cat -c scamp_scam.config
 ls object*fits > good_object_pass1.txt
 [Edit out any objects that had red lines in the scamp output]
 
@@ -128,7 +128,7 @@ python ../../make_wht_for_swarp_1.py
 
 --------------------------------------------------
 
-Step 10: Run the initial swarp to create a median-stacked coadd file
+Step 11: Run the initial swarp to create a median-stacked coadd file
 Even at this stage, set the center, pixel scale, and output image size,
 which will be lens-dependent.
 
@@ -142,7 +142,7 @@ swarp @good_object_pass1.txt -c swarp_0435_1.config
 
 --------------------------------------------------
 
-Step 11: Make the updated weight maps
+Step 12: Make the updated weight maps
 
 *** NB: The FLXSCAL paramter produced by scamp does the following:
  1. Converts the units of the output swarped file into counts/sec
@@ -156,7 +156,7 @@ python ../../make_wht_for_swarp_2.py swarp_median.fits 3.
 
 --------------------------------------------------
 
-Step 12: Do the penultimate coadd, with a lens-based config file that is 
+Step 13: Do the penultimate coadd, with a lens-based config file that is 
 slightly different from the one in step 10.  The differences are two-fold:
   1. COMBINE_TYPE is now WEIGHTED and RESAMPLE is now N
      (These changes are reflected in swarp_scam_2.config)
@@ -168,7 +168,7 @@ swarp *resamp.fits -c swarp_0435_2.config -IMAGEOUT_NAME 0435_scam_mar14_i.fits 
 
 --------------------------------------------------
 
-Step 13: Get the photometric zero point
+Step 14: Get the photometric zero point
 
 Re-run steps 1-12 above on the SDSS 0924 r-band data, but just use 
 swarp_scam_2.config in step 12 rather than a custom file
@@ -186,7 +186,7 @@ Download the SDSS star magnitudes (ugriz), do some slight editing and put
 Find the offset between the SuprimeCam data (assumed ZP=30.0) and the true
  magnitudes:
 
-ipython
+ipython -pylab
 import matchcat as mc
 scamcat,sdsscat = mc.find_match('0924_scam_mar14_i.cat','0924_sdss_star_mags.txt',0.5,catformat1='ldac',racol2=0,deccol2=1)
 figure(3)
@@ -209,7 +209,7 @@ to get ZP offset = 2.445
 
 --------------------------------------------------
 
-Step 14: Run SExtractor on the final coadd, using a filter-specific config file
+Step 15: Run SExtractor on the final coadd, using a filter-specific config file
 
 ipython
 import astromatic as astrom
