@@ -6,5 +6,6 @@ regfile = infile.replace('.fits','.reg')
 outcat = infile.replace('.fits','.cat')
 print 'Running SExtractor on %s' % infile
 
-ast.make_cat_suprimecam(infile,outcat=outcat,regfile=regfile,satur=60000.)
+ast.make_cat_suprimecam(infile,outcat=outcat,regfile=regfile,
+                        configfile='sext_scam_astrom.config',satur=60000.)
 
