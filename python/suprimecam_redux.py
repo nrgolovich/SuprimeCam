@@ -48,7 +48,7 @@ def rename_before_swarp(indir='../Calib'):
 
 #---------------------------------------------------------------------------
 
-def make_wht_for_swarp(infiles, mingood=-100, outext='_wht'):
+def make_wht_for_swarp(infiles, mingood=-100, outext='_wht_init'):
     """
     Creates a weight file for each input file, in preparation for running
     swarp the first time.  The SuprimeCam pipeline marks bad pixels with
@@ -66,7 +66,7 @@ def make_wht_for_swarp(infiles, mingood=-100, outext='_wht'):
                     words, for an input file of [root].fits the output file
                     name will be [root][outext].fits
                   SExtractor, swarp, etc., have a default of:   '.weight'
-                  However, the default for this function is:    '_wht'
+                  However, the default for this function is:    '_wht_init'
 
     Outputs:
        Each input file called [root].fits will produce an output weight file
