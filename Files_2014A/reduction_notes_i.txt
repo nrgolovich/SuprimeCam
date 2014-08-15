@@ -106,7 +106,7 @@ Step 8: Run SExtractor on the files
 cd ../Coadd
 ln -s ../../sext_astfile.param .
 ln -s ../../sext_scam.config .
-ln -s ../../scamp_scam.config .
+ln -s ../../scamp_scam_astrom.config .
 ln -s ../../swarp_scam_1.config .
 ln -s ../../swarp_scam_2.config .
 python ../../rename_before_swarp.py
