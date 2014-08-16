@@ -109,7 +109,7 @@ mask_AGX.csh mask_AGX.in
 
 --------------------------------------------------
 
-Step 8: Run SExtractor on the files
+Step 8: Make the initial weight files before running SExtractor
 
 cd ../Coadd
 ln -s ../../sext_astfile.param .
@@ -119,22 +119,23 @@ ln -s ../../swarp_scam_1.config .
 ln -s ../../swarp_scam_2.config .
 python ../../rename_before_swarp.py
 
-ls object*.fits | grep -v weight | xargs -I {} -P 6 python ../../run_sext_scam_r.py {}
+
+python ../../make_wht_for_swarp_1.py
 
 --------------------------------------------------
 
-Step 9: Run scamp on the files, using 2MASS reference frame
+Step 9: Run SExtractor on the files
+
+ls object*.fits | grep -v wht | xargs -I {} -P 6 python ../../run_sext_scam_1.py {}
+
+--------------------------------------------------
+
+Step 10: Run scamp on the files, using 2MASS reference frame
 
 scamp object*cat -c scamp_scam.config
 
-ls object*fits > good_object_pass1.txt
+ls object*fits | grep -v wht > good_object_pass1.txt
 [Edit out any objects that had red lines in the scamp output]
-
---------------------------------------------------
-
-Step 10: Make the initial weight files for the initial coaddition
-
-python ../../make_wht_for_swarp_1.py
 
 --------------------------------------------------
 
