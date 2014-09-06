@@ -1,0 +1,60 @@
+###########################################################################
+#
+# Notes on derivation of zero points for SuprimeCam data of March 2014
+#
+###########################################################################
+
+Step 1
+------
+Run steps 1-12 from one of the reduction_notes_?.txt files on the
+SDSS 0924 data, but just use swarp_scam_2.config in step 12 rather than a 
+custom file
+
+Step 2
+------
+Run SExtractor on the output file:
+Example with r-band
+ ipython
+ import astromatic as astrom
+  astrom.make_cat_suprimecam('0924_scam_mar14_r.fits','0924_scam_mar14_r.cat','0924_scam_mar14_r.reg',weight_file='0924_scam_mar14_r_wht.fits')
+
+Step 3
+------
+Go to the SDSS server and select stars within 20 arcmin of the lens system.
+
+Step 4
+------
+Download the SDSS star magnitudes (ugriz), do some slight editing and put 
+ the results into a text file: 0924_sdss_mags.txt
+
+Step 5
+------
+Find the offset between the SuprimeCam data (assumed ZP=30.0) and the true
+ magnitudes:
+
+Example with r-band
+  ipython -pylab
+  import matchcat as mc
+  scamcat,sdsscat = mc.find_match('0924_scam_mar14_r.cat','0924_sdss_star_mags.txt',0.5,catformat1='ldac',racol2=0,deccol2=1)
+  mag_scam = scamcat.data['mag_auto'][scamcat.mask]
+  mag_sdss = sdsscat.data['f4'][sdsscat.mask] # r-band is column 5
+  mag_diff = mag_scam - mag_sdss
+  figure(3)
+  plot(mag_scam,mag_diff,'bo')
+  xlim(12,26)
+  ylim(0,4.5)
+  figure(4)
+  diffgood = mag_diff[(mag_scam>16.) & (mag_scam<23.) & (mag_diff>1.5) & (mag_diff<3.)]
+  hist(diffgood,bins=20)
+
+Results
+-------
+  Band   dmm*   ZP
+  ----  ------ -----
+   g    <0.008 27.358
+   r    <0.005 27.685
+   i    <0.008 27.555
+
+* dmm is the difference, in magnitudes, between the mean and median of
+diffgood (calculated in the second-to-last line of the example above
+

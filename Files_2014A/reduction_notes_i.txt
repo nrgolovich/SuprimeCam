@@ -177,48 +177,7 @@ swarp *resamp.fits -c swarp_0435_2.config -IMAGEOUT_NAME 0435_scam_mar14_i.fits 
 
 --------------------------------------------------
 
-Step 15: Get the photometric zero point
-
-Re-run steps 1-12 above on the SDSS 0924 r-band data, but just use 
-swarp_scam_2.config in step 12 rather than a custom file
-
-Run SExtractor on the output file:
- ipython
- import astromatic as astrom
-  astrom.make_cat_suprimecam('0924_scam_mar14_i.fits','0924_scam_mar14_i.cat','0924_scam_mar14_i.reg',weight_file='0924_scam_mar14_i_wht.fits')
-
-Go to the SDSS server and select stars within 20 arcmin of the lens system.
-
-Download the SDSS star magnitudes (ugriz), do some slight editing and put 
- the results into a text file: 0924_sdss_mags.txt
-
-Find the offset between the SuprimeCam data (assumed ZP=30.0) and the true
- magnitudes:
-
-ipython -pylab
-import matchcat as mc
-scamcat,sdsscat = mc.find_match('0924_scam_mar14_i.cat','0924_sdss_star_mags.txt',0.5,catformat1='ldac',racol2=0,deccol2=1)
-figure(3)
-mc.color_mag(scamcat,sdsscat,'mag_auto','f5','mag_scam','mag_sdss')
-
-mag_scam = scamcat.data['mag_auto'][scamcat.mask]
-mag_sdss = sdsscat.data['f3'][sdsscat.mask] # r-band is column 4
-mag_diff = mag_scam - mag_sdss
-figure(3)
-plot(mag_scam,mag_diff,'bo')
-xlim(12,26)
-ylim(0,4.5)
-figure(4)
-diffgood = mag_diff[(mag_scam>16.) & (mag_scam<23.) & (mag_diff>1.5) & (mag_diff<3.)]
-hist(diffgood,bins=20)
-
-Mean and median of diffgood are within 0.008 mags.  Take average of those
-to get ZP offset = 2.445
-==> proper ZP = 27.555
-
---------------------------------------------------
-
-Step 16: Run SExtractor on the final coadd, using a filter-specific config file
+Step 15: Run SExtractor on the final coadd, using a filter-specific config file
 
 ipython
 import astromatic as astrom
