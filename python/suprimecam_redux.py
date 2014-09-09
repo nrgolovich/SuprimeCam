@@ -399,3 +399,67 @@ def add_exptime(inlist, exptime, hext=0, verbose=True):
         hdu.flush()
         if verbose:
             print 'Updated %s with EXPTIME=%.2f' % (i,exptime)
+
+#---------------------------------------------------------------------------
+
+def make_texp_map(infiles, texp, outext='_texp'):
+    """
+    Uses the weight files in the input list to create individual exposure
+    time maps for each resampled image.
+    NOTE: The input weight files need to be the resampled and then 
+    modified ones that are created with the make_wht_for_final function
+
+    Inputs:
+       infiles  - list of input files, perhaps created with a glob.glob call
+       texp     - exposure time for the original image
+       outext   - extension used for output exposure-time file name. In other
+                    words, for an input file of [root].fits the output file
+                    name will be [root][outext].fits
+                  Default: '_texp'
+
+    Outputs:
+       Each input file called [root].fits will produce an output exposure time
+        file called [root][outext].fits
+    """
+
+    """ Make sure that the input is either a list or a single file """
+
+    if type(infiles) is str:
+        print ""
+        print "Single input file"
+        tmplist = [infiles,]
+    elif type(infiles) is list:
+        print ""
+        print "Input file list with %d members" % (len(infiles))
+        tmplist = infiles
+    else:
+        print ""
+        print "Warning.  Input frames need to be either a list of files "
+        print " (python type==list) or a single input file name."
+        print ""
+        return
+
+    """ Run through the list """
+
+    print ''
+    print 'Making individual exposure-time maps'
+    print '------------------------------------'
+    for f in tmplist:
+        """ Get input file"""
+        print 'Input file:  %s' % f
+        data,hdr = pf.getdata(f,header=True)
+
+        """ Create the exposure time data as integer """
+        data[data>0] = texp
+        data = data.astype(int)
+        hdr['object'] = 'Exposure time map'
+
+        """ Write the output file """
+        outfile = f.replace('.fits','%s.fits' % outext)
+        pf.PrimaryHDU(data,hdr).writeto(outfile)
+        print 'Output file: %s' % outfile
+        print ''
+
+        """ Clean up """
+        del data,hdr
+
