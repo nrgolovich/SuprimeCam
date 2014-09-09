@@ -56,7 +56,7 @@ overscansub.csh overscan.in
 
 --------------------------------------------------
 
-Step 4: Make a flat field
+Step 4: Make a flat field (only needs to be done the first time)
 
 Try doing this with the data themselves.  Create a Skyflat_r directory
 and in in make links to all the overscan-subtracted files for the
@@ -118,7 +118,6 @@ ln -s ../../scamp_scam.config .
 ln -s ../../swarp_scam_1.config .
 ln -s ../../swarp_scam_2.config .
 python ../../rename_before_swarp.py
-
 
 python ../../make_wht_for_swarp_1.py
 
