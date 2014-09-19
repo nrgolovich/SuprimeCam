@@ -23,9 +23,9 @@ if ( $# < 2) then
     exit
 endif
 
-sconfig = swarp_$1_2.config
-outname = $1_scam_mar14_$2.fits
-whtname = $1_scam_mar14_$2_wht.fits
+set sconfig = swarp_$1_2.config
+set outname = $1_scam_mar14_$2.fits
+set whtname = $1_scam_mar14_$2_wht.fits
 swarp *resamp.fits -c $sconfig -IMAGEOUT_NAME $outname -WEIGHTOUT_NAME $whtname
 
 echo ""

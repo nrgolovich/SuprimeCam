@@ -112,11 +112,10 @@ mask_AGX.csh mask_AGX.in
 Step 8: Make the initial weight files before running SExtractor
 
 cd ../Coadd
-ln -s ../../sext_astfile.param .
-ln -s ../../sext_scam_astrom.config .
-ln -s ../../scamp_scam.config .
-ln -s ../../swarp_scam_1.config .
-ln -s ../../swarp_scam_2.config .
+ln -s $gitdir/SuprimeCam/Astrometry/sext_astfile.param .
+ln -s $gitdir/SuprimeCam/Astrometry/sext_scam_astrom.config .
+ln -s $gitdir/SuprimeCam/Astrometry/scamp_scam.config .
+ln -s $gitdir/SuprimeCam/Scripts/run_final_swarp.sh
 python ../../rename_before_swarp.py
 
 python ../../make_wht_for_swarp_1.py
@@ -143,8 +142,8 @@ Even at this stage, set the center, pixel scale, and output image size,
 which will be lens-dependent.
 
 #Example for 0435
-ln -s ../../swarp_0435_1.config .
-ln -s ../../swarp_0435_2.config .
+ln -s $gitdir/Suprimecam/Files_2014A/swarp_0435_1.config .
+ln -s $gitdir/Suprimecam/Files_2014A/swarp_0435_2.config .
 swarp @good_object_pass1.txt -c swarp_0435_1.config
 
 # Generic version:
@@ -172,7 +171,7 @@ python ../../add_exptime.py 300
 
 --------------------------------------------------
 
-Step 14: Do the penultimate coadd, with a lens-based config file that is 
+Step 14: Do the ultimate coadd, with a lens-based config file that is 
 slightly different from the one in step 10.  The differences are two-fold:
   1. COMBINE_TYPE is now WEIGHTED and RESAMPLE is now N
      (These changes are reflected in swarp_scam_2.config)
@@ -180,7 +179,8 @@ slightly different from the one in step 10.  The differences are two-fold:
      system
 
 # Example for HE0435 data
-swarp *resamp.fits -c swarp_0435_2.config -IMAGEOUT_NAME 0435_scam_mar14_r.fits -WEIGHTOUT_NAME 0435_scam_mar14_r_wht.fits
+
+./run_final_swarp.sh 0435 r
 
 --------------------------------------------------
 

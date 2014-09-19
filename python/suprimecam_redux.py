@@ -402,7 +402,7 @@ def add_exptime(inlist, exptime, hext=0, verbose=True):
 
 #---------------------------------------------------------------------------
 
-def make_texp_map(infiles, texp, outext='_texp'):
+def make_texp_map(infiles, texp, whtext='wht', outext='texp'):
     """
     Uses the weight files in the input list to create individual exposure
     time maps for each resampled image.
@@ -412,14 +412,17 @@ def make_texp_map(infiles, texp, outext='_texp'):
     Inputs:
        infiles  - list of input files, perhaps created with a glob.glob call
        texp     - exposure time for the original image
+       whtext   - extension on input files, which should be the weight
+                  files.  The default, 'wht' means that the files in infiles
+                  are expected to be called [root]_wht.fits
        outext   - extension used for output exposure-time file name. In other
-                    words, for an input file of [root].fits the output file
-                    name will be [root][outext].fits
-                  Default: '_texp'
+                    words, for an input file of [root]_[whtext].fits the output 
+                    file name will be [root]_[outext].fits
+                  Default: 'texp'
 
     Outputs:
-       Each input file called [root].fits will produce an output exposure time
-        file called [root][outext].fits
+       Each input file called [root]_[whtext].fits will produce an output 
+        exposure time file called [root]_[outext].fits
     """
 
     """ Make sure that the input is either a list or a single file """
@@ -455,7 +458,7 @@ def make_texp_map(infiles, texp, outext='_texp'):
         hdr['object'] = 'Exposure time map'
 
         """ Write the output file """
-        outfile = f.replace('.fits','%s.fits' % outext)
+        outfile = f.replace('%s.fits' % whtext,'%s.fits' % outext)
         pf.PrimaryHDU(data,hdr).writeto(outfile)
         print 'Output file: %s' % outfile
         print ''
