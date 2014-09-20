@@ -104,11 +104,10 @@ mask_AGX.csh mask_AGX.in
 Step 8: Make the initial weight files before running SExtractor
 
 cd ../Coadd
-ln -s ../../sext_astfile.param .
-ln -s ../../sext_scam_astrom.config .
-ln -s ../../scamp_scam.config .
-ln -s ../../swarp_scam_1.config .
-ln -s ../../swarp_scam_2.config .
+ln -s $gitdir/SuprimeCam/Astromatic/sext_astfile.param .
+ln -s $gitdir/SuprimeCam/Astromatic/sext_scam_astrom.config .
+ln -s $gitdir/SuprimeCam/Astromatic/scamp_scam.config .
+ln -s $gitdir/SuprimeCam/Scripts/run_final_swarp.sh
 python ../../rename_before_swarp.py
 
 python ../../make_wht_for_swarp_1.py
@@ -172,11 +171,20 @@ slightly different from the one in step 10.  The differences are two-fold:
      system
 
 # Example for HE0435 data
-swarp *resamp.fits -c swarp_0435_2.config -IMAGEOUT_NAME 0435_scam_mar14_g.fits -WEIGHTOUT_NAME 0435_scam_mar14_g_wht.fits
+./run_final_swarp.sh 0435 g
 
 --------------------------------------------------
 
-Step 15: Run SExtractor on the final coadd, using a filter-specific config file
+Step 15: Create the exposure time map
+
+# Example for HE0435
+
+ln -s $gitdir/SuprimeCam/Files_2014A/swarp_0435_texp.config .
+python ../../make_texp_map.py 0435 g 120
+
+--------------------------------------------------
+
+Step NN: Run SExtractor on the final coadd, using a filter-specific config file
 
 ipython
 import astromatic as astrom

@@ -17,6 +17,7 @@ The functions in this file take over after the AG masking step.
 import pyfits as pf
 import numpy as n
 from math import sqrt
+import glob
 
 #---------------------------------------------------------------------------
 
@@ -466,3 +467,57 @@ def make_texp_map(infiles, texp, whtext='wht', outext='texp'):
         """ Clean up """
         del data,hdr
 
+#---------------------------------------------------------------------------
+
+def fix_final_headers(scifile, texpfile, zeropoint, indext='resamp.fits'):
+    """
+    When swarp combines images, it can get the total exposure time and
+    final gain incorrect, since it does not take weighting properly into
+    account when calculating these values.  This function uses information
+    from the exposure time map to fix this problem.
+
+    For files where the units are counts/sec, as the SuprimeCam final images
+    are, the correct values to use as inputs for SExtractor are:
+      GAIN:       gain x t_exp **
+      ZEROPOINT:  zeropoint from photometric data
+
+    ** NOTE: However, the make_cat_suprimecam function in astromatic.py
+       takes care of the multiplication by the exposure time.  Therefore,
+       set GAIN to just the mean gain.
+    
+    """
+
+    """ Get mean gain """
+    indlist = glob.glob('*%s' % indext)
+    gain = n.zeros(len(indlist))
+    for i in range(len(indlist)):
+        hdr = pf.getheader(indlist[i])
+        gain[i] = hdr['gain']
+        del hdr
+    print ''
+    print 'Mean gain in input *%s files: %6.3f' % (indext,gain.mean())
+
+    """ Get maximum t_exp """
+    print 'Loading exposure map from %s ...' % texpfile
+    data = pf.getdata(texpfile)
+    datamax = data.max()
+    del data
+    print 'Maximum exposure time in %s: %8.1f sec' % (texpfile,datamax)
+
+    """ Adjust the header in the science file """
+    print ''
+    print 'Adjusted header values for %s' % scifile
+    print '------------------------------------------------------'
+    print 'EXPTIME:   %8.1f' % datamax
+    print 'GAIN:      %6.3f' % gain.mean()
+    print 'ZEROPOINT: %6.3f' % zeropoint
+    print 'BUNIT:     COUNTS/S'
+    print ''
+    hdu = pf.open(scifile,mode='update')
+    hdr = hdu[0].header
+    hdr.update('exptime',datamax,'Maximum equivalent exposure time (s)')
+    hdr.update('gain',gain.mean(),'Mean gain of input files (e-/ADU)')
+    hdr.update('bunit','COUNTS/S','Brightness units',after='gain')
+    hdr.update('zeropt',zeropoint,'Zero point for photometry',after='bunit')
+    hdu.flush()
+    print 'Finished updating header for %s' % scifile
