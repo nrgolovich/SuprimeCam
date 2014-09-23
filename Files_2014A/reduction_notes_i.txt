@@ -199,15 +199,8 @@ scam.fix_final_headers(scifile,texpfile,zeropt)
 
 Step 17: Run SExtractor on the final coadd, using a filter-specific config file
 
-** NOTE: at this point, the final files have been moved to the Final directory
-
-ipython
-import astromatic as astrom
-zeropt = 27.555
-scifile = '0435_scam_mar14_i.fits'
-catfile = scifile.replace('fits','cat')
-regfile = scifile.replace('fits','reg')
-whtfile = scifile.replace('.fits','_wht.fits')
-configfile = 'sext_scam_final.config'
-astrom.make_cat_suprimecam(scifile,catfile,regfile,configfile=configfile,weight_file=whtfile,zeropt=zeropt)
+# Example for HE0435
+mv 0435_scam_mar14_*fits ../../../Final
+cd ../../../Final
+python $gitdir/SuprimeCam/python run_sext_final.py 0435_scam_mar14_i.fits
 

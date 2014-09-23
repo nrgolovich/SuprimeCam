@@ -4,12 +4,12 @@ Script to call the make_texp_map method in suprimecam_redux.py for all of
 the resampled weight files and then swarp them all together into a
 final exposure time map.
 
-Usage: python make_texp_maps.py [root] [band] [texp]
+Usage: python make_texp_map.py [root] [band] [texp]
 
 Example for the observations of the 1608+656 field in the r-band where each
  input exposure is 300 seconds:
 
-   python make_texp_maps.py 1608 r 300
+   python make_texp_map.py 1608 r 300
 
 """
 
@@ -22,7 +22,7 @@ print len(sys.argv)
 
 if len(sys.argv)<4:
     print ""
-    print "ERROR: make_texp_maps.py requires three input parameters"
+    print "ERROR: make_texp_map.py requires three input parameters"
     print "  1. Root name for field"
     print "  2. Filter used for observations"
     print "  3. Exposure time in seconds for each of the input files"

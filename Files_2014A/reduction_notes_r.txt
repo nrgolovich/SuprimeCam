@@ -189,13 +189,25 @@ Step 15: Create the exposure time map
 # Example for HE0435
 
 ln -s $gitdir/SuprimeCam/Files_2014A/swarp_0435_texp.config .
-python ../../make_texp_maps.py 0435 r 300
+python ../../make_texp_map.py 0435 r 300
 
 --------------------------------------------------
 
-Step NN: Run SExtractor on the final coadd, using a filter-specific config file
+Step 16: Fix header in final combined image
 
+# Example for HE0435
 ipython
-import astromatic as astrom
-astrom.make_cat_suprimecam('0435_scam_mar14_r.fits','0435_scam_mar14_r.cat','0435_scam_mar14_r.reg',weight_file='0435_scam_mar14_r_wht.fits',zeropt=27.685)
+import suprimecam_redux as scam
+zeropt = 27.685
+scifile = '0435_scam_mar14_r.fits'
+texpfile = scifile.replace('.fits','_texp.fits')
+scam.fix_final_headers(scifile,texpfile,zeropt)
 
+--------------------------------------------------
+
+Step 17: Run SExtractor on the final coadd, using a filter-specific config file
+
+# Example for HE0435
+mv 0435_scam_mar14*fits ../../../Final
+cd ../../../Final
+python $gitdir/SuprimeCam/python/run_sext_final.py 0435_scam_mar14_r.fits

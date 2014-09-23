@@ -184,8 +184,21 @@ python ../../make_texp_map.py 0435 g 120
 
 --------------------------------------------------
 
-Step NN: Run SExtractor on the final coadd, using a filter-specific config file
+Step 16: Fix header in final combined image
 
+# Example for HE0435
 ipython
-import astromatic as astrom
-astrom.make_cat_suprimecam('0435_scam_mar14_g.fits','0435_scam_mar14_g.cat','0435_scam_mar14_g.reg',weight_file='0435_scam_mar14_g_wht.fits',zeropt=27.358)
+import suprimecam_redux as scam
+zeropt = 27.358
+scifile = '0435_scam_mar14_g.fits'
+texpfile = scifile.replace('.fits','_texp.fits')
+scam.fix_final_headers(scifile,texpfile,zeropt)
+
+--------------------------------------------------
+
+Step 17: Run SExtractor on the final coadd, using a filter-specific config file
+
+# Example for HE0435
+mv 0435_scam_mar14_*fits ../../../Final
+cd ../../../Final
+python $gitdir/SuprimeCam/python/run_sext_final.py 0435_scam_mar14_g.fits
