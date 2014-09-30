@@ -434,7 +434,8 @@ def make_texp_map(infiles, texp, whtext='wht', outext='texp'):
         tmplist = [infiles,]
     elif type(infiles) is list:
         print ""
-        print "Input file list with %d members" % (len(infiles))
+        ncount = len(infiles)
+        print "Input file list with %d members" % ncount
         tmplist = infiles
     else:
         print ""
@@ -448,8 +449,10 @@ def make_texp_map(infiles, texp, whtext='wht', outext='texp'):
     print ''
     print 'Making individual exposure-time maps'
     print '------------------------------------'
+    count = 1
     for f in tmplist:
         """ Get input file"""
+        print 'File %d of %d' % (count,ncount)
         print 'Input file:  %s' % f
         data,hdr = pf.getdata(f,header=True)
 
@@ -466,6 +469,7 @@ def make_texp_map(infiles, texp, whtext='wht', outext='texp'):
 
         """ Clean up """
         del data,hdr
+        count += 1
 
 #---------------------------------------------------------------------------
 
@@ -510,7 +514,7 @@ def fix_final_headers(scifile, texpfile, zeropoint, indext='resamp.fits'):
     print '------------------------------------------------------'
     print 'EXPTIME:   %8.1f' % datamax
     print 'GAIN:      %6.3f' % gain.mean()
-    print 'ZEROPOINT: %6.3f' % zeropoint
+    print 'MAGZPT:    %6.3f' % zeropoint
     print 'BUNIT:     COUNTS/S'
     print ''
     hdu = pf.open(scifile,mode='update')
@@ -518,6 +522,6 @@ def fix_final_headers(scifile, texpfile, zeropoint, indext='resamp.fits'):
     hdr.update('exptime',datamax,'Maximum equivalent exposure time (s)')
     hdr.update('gain',gain.mean(),'Mean gain of input files (e-/ADU)')
     hdr.update('bunit','COUNTS/S','Brightness units',after='gain')
-    hdr.update('zeropt',zeropoint,'Zero point for photometry',after='bunit')
+    hdr.update('magzpt',zeropoint,'Zero point for photometry',after='bunit')
     hdu.flush()
     print 'Finished updating header for %s' % scifile
