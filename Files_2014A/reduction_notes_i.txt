@@ -121,11 +121,12 @@ ls object*.fits | grep -v wht | xargs -I {} -P 6 python ../../run_sext_scam_1.py
 
 --------------------------------------------------
 
-Step 10: Run scamp on the files, using 2MASS reference frame
+Step 10: Run scamp on the files, using the r-band catalog as the reference frame
 
-scamp object*cat -c scamp_scam.config
+#Example for 0435
+scamp object*cat -c scamp_0435.config
 
-ls object*fits | grep -v wht > good_object_pass1.txt
+ls object*fits | grep -v wht > good_frames_pass1.txt
 [Edit out any objects that had red lines in the scamp output]
 
 --------------------------------------------------
@@ -137,10 +138,10 @@ which will be lens-dependent.
 #Example for 0435
 ln -s $gitdir/SuprimeCam/Files_2014A/swarp_0435_1.config .
 ln -s $gitdir/SuprimeCam/Files_2014A/swarp_0435_2.config .
-swarp @good_object_pass1.txt -c swarp_0435_1.config
+swarp @good_frames_pass1.txt -c swarp_0435_1.config
 
 # Generic version:
-#  swarp @good_object_pass1.txt -c swarp_scam_1.config
+#  swarp @good_frames_pass1.txt -c swarp_scam_1.config
 
 --------------------------------------------------
 

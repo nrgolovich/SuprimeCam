@@ -68,4 +68,4 @@ print 'Zeropoint       %6.3f' % zeropoint
 print ''
 
 """ Actually run SExtractor """
-astrom.make_cat_suprimecam(scifile,catfile,regfile,configfile=configfile,weight_file=whtfile,zeropt=zeropoint)
+astrom.make_cat_suprimecam(scifile,catfile,regfile,configfile=configfile,whtfile=whtfile,zeropt=zeropoint)

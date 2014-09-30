@@ -20,6 +20,6 @@ configfile = 'sext_scam_final.config'
 print 'Running SExtractor on %s' % infile
 
 ast.make_cat_suprimecam(infile,outcat=outcat,regfile=regfile,
-                        configfile=configfile,weight_file=whtfile,
+                        configfile=configfile,whtfile=whtfile,
                         zeropt=zeropoint)
 
