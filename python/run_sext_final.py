@@ -46,7 +46,7 @@ except:
     print ''
     exit()
 try:
-    zeropoint = hdr['zeropt']
+    zeropoint = hdr['magzpt']
 except:
     print ''
     print 'ERROR: Could not get zeropoint in header for fits file %s' % scifile

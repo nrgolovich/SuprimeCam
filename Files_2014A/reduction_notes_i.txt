@@ -203,5 +203,5 @@ Step 17: Run SExtractor on the final coadd, using a filter-specific config file
 # Example for HE0435
 mv 0435_scam_mar14_*fits ../../../Final
 cd ../../../Final
-python $gitdir/SuprimeCam/python run_sext_final.py 0435_scam_mar14_i.fits
+python $gitdir/SuprimeCam/python/run_sext_final.py 0435_scam_mar14_i.fits
 
