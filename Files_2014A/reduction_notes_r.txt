@@ -128,12 +128,21 @@ ls object*.fits | grep -v wht | xargs -I {} -P 6 python ../../run_sext_scam_1.py
 
 --------------------------------------------------
 
-Step 10: Run scamp on the files, using 2MASS reference frame
+# Loop twice over steps 10-17
+
+Step 10: Run scamp on the files.
+# First pass through the loop: Use 2MASS as the reference frame
 
 scamp object*cat -c scamp_scam.config
+ls object*fits | grep -v wht > good_frames_pass1.txt
+# Edit out any objects that had red lines in the scamp output
 
-ls object*fits | grep -v wht > good_object_pass1.txt
-[Edit out any objects that had red lines in the scamp output]
+# Second pass through the loop: Use catalog generated in Step 17 as the
+#   reference frame
+
+scamp object*cat -c scamp_0435.config
+ls object*fits | grep -v wht > good_frames_pass2.txt
+# Edit out any objects that had red lines in the scamp output
 
 --------------------------------------------------
 
@@ -144,10 +153,11 @@ which will be lens-dependent.
 #Example for 0435
 ln -s $gitdir/Suprimecam/Files_2014A/swarp_0435_1.config .
 ln -s $gitdir/Suprimecam/Files_2014A/swarp_0435_2.config .
-swarp @good_object_pass1.txt -c swarp_0435_1.config
+swarp @good_frames_pass1.txt -c swarp_0435_1.config (first pass)
+swarp @good_frames_pass2.txt -c swarp_0435_1.config (second pass)
 
 # Generic version:
-#  swarp @good_object_pass1.txt -c swarp_scam_1.config
+#  swarp @good_frames_pass1.txt -c swarp_scam_1.config
 
 --------------------------------------------------
 
@@ -197,9 +207,10 @@ Step 16: Fix header in final combined image
 
 # Example for HE0435
 ipython
+lensroot = '0435'
 import suprimecam_redux as scam
 zeropt = 27.685
-scifile = '0435_scam_mar14_r.fits'
+scifile = '%s_scam_mar14_r.fits' % lensroot
 texpfile = scifile.replace('.fits','_texp.fits')
 scam.fix_final_headers(scifile,texpfile,zeropt)
 
