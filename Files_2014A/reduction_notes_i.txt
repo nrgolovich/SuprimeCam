@@ -190,9 +190,10 @@ Step 16: Fix header in final combined image
 
 # Example for HE0435
 ipython
+lensroot = '0435'
 import suprimecam_redux as scam
 zeropt = 27.555
-scifile = '0435_scam_mar14_i.fits'
+scifile = '%s_scam_mar14_i.fits' % lensroot
 texpfile = scifile.replace('.fits','_texp.fits')
 scam.fix_final_headers(scifile,texpfile,zeropt)
 

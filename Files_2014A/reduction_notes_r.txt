@@ -140,7 +140,7 @@ ls object*fits | grep -v wht > good_frames_pass1.txt
 # Second pass through the loop: Use catalog generated in Step 17 as the
 #   reference frame
 
-scamp object*cat -c scamp_0435.config
+scamp object*cat -c scamp_0435_use_rband.config
 ls object*fits | grep -v wht > good_frames_pass2.txt
 # Edit out any objects that had red lines in the scamp output
 
