@@ -14,7 +14,10 @@ following steps:
 The functions in this file take over after the AG masking step.
 """
 
-import pyfits as pf
+try:
+    import pyfits as pf
+except:
+    from astropy.io import fits as pf
 import numpy as n
 from math import sqrt
 import glob

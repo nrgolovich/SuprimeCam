@@ -23,9 +23,32 @@ if ( $# < 2) then
     exit
 endif
 
+# Set up the files needed to run swarp
 set sconfig = swarp_$1_2.config
 set outname = $1_scam_mar14_$2.fits
 set whtname = $1_scam_mar14_$2_wht.fits
+
+# Check for the existence of the input files
+echo ""
+echo "Checking for existence of input file for run_final_swarp.sh"
+echo "-----------------------------------------------------------"
+set existerr = 0
+foreach i ($sconfig)
+   if(! -e $i) then
+      echo " ERROR: $i does not exist."
+      set existerr = 1
+   else
+      echo " Found $i"
+   endif
+end
+if ($existerr) then
+   echo ""
+   echo "Exiting script"
+   echo ""
+   exit
+endif
+
+# Actually run swarp
 swarp *resamp.fits -c $sconfig -IMAGEOUT_NAME $outname -WEIGHTOUT_NAME $whtname
 
 echo ""
