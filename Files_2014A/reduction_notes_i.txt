@@ -124,6 +124,7 @@ ls object*.fits | grep -v wht | xargs -I {} -P 6 python ../../run_sext_scam_1.py
 Step 10: Run scamp on the files, using the r-band catalog as the reference frame
 
 #Example for 0435
+ln -s $gitdir/SuprimeCam/Files_2014A/scamp_0435_use_rband.config .
 scamp object*cat -c scamp_0435_use_rband.config
 
 ls object*fits | grep -v wht > good_frames_pass1.txt
