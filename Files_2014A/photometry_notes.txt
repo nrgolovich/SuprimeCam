@@ -37,16 +37,7 @@ Example with r-band
 ipython -pylab
 import matchcat as mc
 scamcat,sdsscat = mc.find_match('0924_scam_mar14_r.cat','0924_sdss_star_mags.txt',0.5,catformat1='ldac',racol2=0,deccol2=1)
-mag_scam = scamcat.data['mag_auto'][scamcat.mask]
-mag_sdss = sdsscat.data['f4'][sdsscat.mask] # r-band is column 5
-mag_diff = mag_scam - mag_sdss
-figure(3)
-plot(mag_scam,mag_diff,'bo')
-xlim(12,26)
-ylim(0,4.5)
-figure(4)
-diffgood = mag_diff[(mag_scam>16.) & (mag_scam<23.) & (mag_diff>1.5) & (mag_diff<3.)]
-hist(diffgood,bins=20)
+mc.find_zp(scamcat,sdsscat,'mag_auto','f4',magmax=26.,diffmin=0.,diffmax=4.5)
 
 Results
 -------
