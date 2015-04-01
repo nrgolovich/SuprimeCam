@@ -2,7 +2,7 @@
 Simple code to just call the add_exptime function for a list of files
 """
 
-import suprimecam_redux as scam
+import ccdredux as ccd
 import glob
 import sys
 
@@ -19,5 +19,5 @@ if len(sys.argv) < 2:
 exptime = float(sys.argv[1])
 inlist = glob.glob('*resamp.fits')
 
-scam.add_exptime(inlist,exptime)
+ccd.add_exptime(inlist,exptime)
 
