@@ -24,24 +24,22 @@ import glob
 
 #---------------------------------------------------------------------------
 
-def rename_before_swarp(indir='../Calib'):
+def rename_before_swarp():
     """
 
     Creates symbolic links from to post AG masking step in order to have
-      more compact filenames.
+      more compact filenames. Will rename the files within the folder the
+      routine is run from.
     Input files are expected to have the following form:
-        [indir]/AgfTo_RH[obsdate]objectnnn_[chipname].fits
-    They will be link with a link name of [outdir]/objectnnn_[chipname].fits
-
-    Inputs:
-      indir  -  Location of post AG masking files (AgfTo_RH*fits)
+        AgfTo_RH[obsdate]objectnnn_[chipname].fits
+    They will be link with a link name of objectnnn_[chipname].fits
 
     """
     import glob
     import os
 
     """ Get the input file list """
-    infiles = glob.glob('%s/AgfTo_RH*fits' % indir)
+    infiles = glob.glob('AgfTo_RH*fits')
 
     """ Rename the files """
     for f in infiles:
