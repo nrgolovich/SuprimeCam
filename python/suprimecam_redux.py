@@ -116,7 +116,7 @@ def make_wht_for_swarp(infiles, mingood=-100, outext='_wht_init'):
         ohdu = pf.PrimaryHDU(whtdat)
         ohdr = ohdu.header
         oname = 'Weight file for %s' % objname
-        ohdr.update('object',oname,'Object name')
+        ohdr.set('object',oname,'Object name')
         ofile = f.replace('.fits','%s.fits') % outext
         ohdu.writeto(ofile)
         print 'Output file: %s' % ofile
