@@ -119,13 +119,13 @@ overscansub.csh ovserscansub.lis
 ### Skyflat option (for g, r, i):
 ```
 ls -1 To_RH*.fits > mkflat.lis
-mask_mkflat_HA.csh mkflat.lis object 0.4 1.3
+mask_mkflat_HA.csh mkflat.lis skyflat_g 0.4 1.3
 ```
 ### Check that the flats look reasonable
 e.g. with:
 
 ```
-ds9 -mosaic wcs object*.fits
+ds9 -mosaic wcs skyflat*.fits
 ```
 ### Clean up working files to save disk space
 rm To_*
@@ -266,13 +266,13 @@ overscansub.csh ovserscansub.lis
 ### Skyflat option (for g, r, i):
 ```
 ls -1 To_RH*.fits > mkflat.lis
-mask_mkflat_HA.csh mkflat.lis object 0.4 1.3
+mask_mkflat_HA.csh mkflat.lis skyflat_r 0.4 1.3
 ```
 ### Check that the flats look reasonable
 e.g. with:
 
 ```
-ds9 -mosaic wcs object*.fits
+ds9 -mosaic wcs skyflat*.fits
 ```
 ### Clean up working files to save disk space
 rm To_*
@@ -337,13 +337,13 @@ overscansub.csh ovserscansub.lis
 ### Skyflat option (for g, r, i):
 ```
 ls -1 To_RH*.fits > mkflat.lis
-mask_mkflat_HA.csh mkflat.lis object 0.4 1.3
+mask_mkflat_HA.csh mkflat.lis skyflat_i 0.4 1.3
 ```
 ### Check that the flats look reasonable
 e.g. with:
 
 ```
-ds9 -mosaic wcs object*.fits
+ds9 -mosaic wcs skyflat*.fits
 ```
 ### Clean up working files to save disk space
 rm To_*
@@ -396,7 +396,7 @@ mask_mkflat_HA.csh mkflat.lis dome 0.4 1.3
 e.g. with:
 
 ```
-ds9 -mosaic wcs object*.fits
+ds9 -mosaic wcs dome*.fits
 ```
 ### Clean up working files to save disk space
 rm To_*
