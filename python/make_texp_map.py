@@ -32,9 +32,7 @@ if len(sys.argv)<2:
     exit()
 
 infiles = glob.glob('object*resamp_wht.fits')
-#rootname = sys.argv[1]
-#obsband = sys.argv[1]
-texp = float(sys.argv[2])
+texp = float(sys.argv[1])
 
 print ""
 print "Making the exposure maps for the individual input files"
@@ -44,7 +42,6 @@ ccdredux.make_texp_map(infiles,texp)
 print ""
 print "Using swarp to combine the individual files into the final exposure map"
 print "-----------------------------------------------------------------------"
-#configfile = 'swarp_%s_texp.config' % rootname
 configfile = 'swarp_texp.config'
 if os.path.isfile(configfile) is False:
     print ""
