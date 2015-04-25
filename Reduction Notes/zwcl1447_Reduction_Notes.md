@@ -25,10 +25,16 @@ mkdir g r i
 
 
 # r
-Go to the g directory.
+Go to the r directory.
 
 ```
 cd r
+```
+
+Define the exposure time for the individual exposures in seconds.
+
+```
+EXPTIME=360
 ```
 
 ## SDFRED Reduction Portion
@@ -169,10 +175,8 @@ python $gitdir/SuprimeCam/python/make_wht_for_swarp_2.py swarp_median.fits 3.
 ### Put the exposure time back into the individual resampled files
 The exposure time was not transfered to the *resamp.fits images. We add this back here.
 
-**Use correct individual exposure time in seconds as the argument (e.g., `add_exptime.py 300` for 300s exposures).**
-
 ```
-python $gitdir/SuprimeCam/python/add_exptime.py 360
+python $gitdir/SuprimeCam/python/add_exptime.py $EXPTIME
 ```
 
 ### Do the ultimate coadd
@@ -198,6 +202,29 @@ ds9 -tile swarp_wmean.fits -scale log -scale limits 0 100 -zoom to fit swarp_wme
 
 ### Create the exposure time map
 
+```
+ln -s $gitdir/SuprimeCam/Astromatic/swarp_texp.config .
+python $gitdir/SuprimeCam/python/make_texp_map.py $EXPTIME
+```
+creates swarp_wmean_texp
+
+### Fix header in final combined image
+Correct the header information regarding exposure time and zero point.
+
+*make sure correct zero point is input as second argument*
+
+```
+python $gitdir/SuprimeCam/python/fix_header_final.py swarp_wmean.fits 0
+```
+
+### Run SExtractor on the final coadd, using a filter-specific config file
+```
+ln -s $gitdir/SuprimeCam/Astromatic/sext_scam_final.config .
+python $gitdir/SuprimeCam/python/run_sext_final.py swarp_wmean.fits
+```
+Creates swarp_wmean.cat.
+
+_if previous scamp run had failed chips then you can now go back to that step and run the command with option -ASTREFCAT_NAME swarp_wmean.cat and repeat the subsequent steps_
 
 # g
 Go to the g directory.
