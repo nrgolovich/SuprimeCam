@@ -21,18 +21,20 @@ import os
 
 print len(sys.argv)
 
-if len(sys.argv)<2:
+if len(sys.argv)<3:
     print ""
     print "ERROR: make_texp_map.py requires one input parameters"
     print "  1. Exposure time in seconds for each of the input files"
+    print "  2. field center ra,dec in degrees"
     print ""
     print "For example, "
-    print "   python make_texp_map.py 300"
+    print "   python make_texp_map.py 300 9.5367,29.576"
     print ""
     exit()
 
 infiles = glob.glob('object*resamp_wht.fits')
 texp = float(sys.argv[1])
+fieldcenter = sys.argv[2]
 
 print ""
 print "Making the exposure maps for the individual input files"
@@ -50,7 +52,8 @@ if os.path.isfile(configfile) is False:
     exit()
 else:
     outfile = 'swarp_wmean_texp.fits'
-    os.system('swarp *texp.fits -c %s -IMAGEOUT_NAME %s' % (configfile,outfile))
+    print "Running: swarp *texp.fits -c %s -IMAGEOUT_NAME %s -CENTER_TYPE MANUAL -CENTER %s" % (configfile,outfile,fieldcenter)
+    os.system('swarp *texp.fits -c %s -IMAGEOUT_NAME %s -CENTER_TYPE MANUAL -CENTER %s' % (configfile,outfile,fieldcenter))
     print ''
     print 'Created output exposure time map: %s' % outfile
     print ''
