@@ -42,14 +42,14 @@ ccdredux.make_texp_map(infiles,texp)
 print ""
 print "Using swarp to combine the individual files into the final exposure map"
 print "-----------------------------------------------------------------------"
-configfile = 'swarp_wmean_texp.config'
+configfile = 'swarp_texp.config'
 if os.path.isfile(configfile) is False:
     print ""
     print 'ERROR: Missing the expected swarp configuration file: %s' % configfile
     print ''
     exit()
 else:
-    outfile = 'scam_texp.fits'
+    outfile = 'swarp_wmean_texp.fits'
     os.system('swarp *texp.fits -c %s -IMAGEOUT_NAME %s' % (configfile,outfile))
     print ''
     print 'Created output exposure time map: %s' % outfile

@@ -3,7 +3,9 @@ These are the Subaru SuprimeCam reduction notes. The
 ```
 code blocks
 ```
-are meant to be copied in to the terminal commandline. It is recommended that you start with your deepest band first, as some of reduction outputs can help with the reduction of the other bands (e.g. using the stacked catalog as input to scamp).
+are meant to be copied in to the terminal commandline. 
+
+It is recommended that you start with your deepest band first, as some of reduction outputs can help with the reduction of the other bands (e.g. using the stacked catalog as input to scamp).
 
 This reduction is run with the following versions:
 
@@ -21,14 +23,30 @@ cd zwcl1447
 mkdir g r i
 ```
 
+Define the base name for result reduced files (e.g. short name of the cluster).
 
+```
+basename=ZwCL1447
+```
 
+Define the deepest band. Reduction should start with this band as some of it files may be used in the reduction of the other bands.
+
+```
+deepband=r
+```
 
 # r
-Go to the g directory.
+Go to the r directory.
 
 ```
 cd r
+band=r
+```
+
+Define the exposure time for the individual exposures in seconds.
+
+```
+EXPTIME=360
 ```
 
 ## SDFRED Reduction Portion
@@ -106,7 +124,8 @@ Will create `objectnnn_[chipname].fits` files from AgfTo_RH[obsdate]objectnnn_[c
 ```
 python $gitdir/SuprimeCam/python/make_wht_for_swarp_1.py
 ```
-Will create 
+Will create *_wht_init.fits files.
+
 ### Run SExtractor on the files
 The number following the -P option gives the number of processors to run in parallel.
 
@@ -134,9 +153,17 @@ Some with 2MASS catalog but none with SDSS-R5 catalog.
 	```
 
 2. Edit out any objects in the good_frames_pass1.txt file that had redlines in the scamp output. Then run through the following steps up to and through running SExtractor on the second swarp coadd, use this catalog as ASTREFCAT_NAME input in the scamp.config file, and repeat all of the following steps a second time.
+	
+	```
+	scamp object*cat -c scamp_scam_pass2.config -ASTREF_NAME ../$basename'_'$deepband'.cat'
+	ls object*fits | grep -v wht | grep -v resamp > good_frames_pass2.txt
+	```
+	*Remove any objects with redlines from the good_frames_pass2.txt file.*
 
 ### Run the initial swarp to create a median-stacked coadd file
 This median-stacked coadd will be used to create a mask for pixels in individual exposures that should be excluded from a final mean-stacked coadd (e.g. saturated bleeds, cosmic-ray, etc. pixels). Note we don't want to stop at this stage because the median-stacked image will have lower signal to noise than the mean-stacked image. This step is necessary to have a clean mean-stack. 
+
+_If this is the second pass then change good_frames_pass1.txt to good_frames_pass2.txt in the following command_
 
 ```
 ln -s $gitdir/Suprimecam/Astromatic/swarp_scam_1.config .
@@ -169,10 +196,8 @@ python $gitdir/SuprimeCam/python/make_wht_for_swarp_2.py swarp_median.fits 3.
 ### Put the exposure time back into the individual resampled files
 The exposure time was not transfered to the *resamp.fits images. We add this back here.
 
-**Use correct individual exposure time in seconds as the argument (e.g., `add_exptime.py 300` for 300s exposures).**
-
 ```
-python $gitdir/SuprimeCam/python/add_exptime.py 360
+python $gitdir/SuprimeCam/python/add_exptime.py $EXPTIME
 ```
 
 ### Do the ultimate coadd
@@ -198,6 +223,37 @@ ds9 -tile swarp_wmean.fits -scale log -scale limits 0 100 -zoom to fit swarp_wme
 
 ### Create the exposure time map
 
+```
+ln -s $gitdir/SuprimeCam/Astromatic/swarp_texp.config .
+python $gitdir/SuprimeCam/python/make_texp_map.py $EXPTIME
+```
+creates swarp_wmean_texp.fits.
+
+### Fix header in final combined image
+Correct the header information regarding exposure time and zero point.
+
+*make sure correct zero point is input as second argument*
+
+```
+python $gitdir/SuprimeCam/python/fix_header_final.py swarp_wmean.fits 0
+```
+
+### Run SExtractor on the final coadd, using a filter-specific config file
+```
+ln -s $gitdir/SuprimeCam/Astromatic/sext_scam_final.config .
+python $gitdir/SuprimeCam/python/run_sext_final.py swarp_wmean.fits
+```
+Creates SExtractor catalog swarp_wmean.cat.
+
+_if previous scamp run had failed chips then you can now go back to that step and run the command with option -ASTREFCAT_NAME swarp_wmean.cat and repeat the subsequent steps_
+
+### Create links to the final files
+```
+ln -s swarp_wmean.fits ../$basename'_'$band'.fits'
+ln -s swarp_wmean_wht.fits ../$basename'_'$band'_wht.fits'
+ln -s swarp_wmean.cat ../$basename'_'$band'.cat'
+ln -s swarp_wmean.reg ../$basename'_'$band'.reg'
+```
 
 # g
 Go to the g directory.
