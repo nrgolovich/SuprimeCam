@@ -428,9 +428,9 @@ def fix_final_headers(scifile, texpfile, zeropoint, indext='resamp.fits'):
     print ''
     hdu = pf.open(scifile,mode='update')
     hdr = hdu[0].header
-    hdr.update('exptime',datamax,'Maximum equivalent exposure time (s)')
-    hdr.update('gain',gain.mean(),'Mean gain of input files (e-/ADU)')
-    hdr.update('bunit','COUNTS/S','Brightness units',after='gain')
-    hdr.update('magzpt',zeropoint,'Zero point for photometry',after='bunit')
+    hdr.set('exptime',datamax,'Maximum equivalent exposure time (s)')
+    hdr.set('gain',gain.mean(),'Mean gain of input files (e-/ADU)')
+    hdr.set('bunit','COUNTS/S','Brightness units',after='gain')
+    hdr.set('magzpt',zeropoint,'Zero point for photometry',after='bunit')
     hdu.flush()
     print 'Finished updating header for %s' % scifile
