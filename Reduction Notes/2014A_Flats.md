@@ -128,11 +128,13 @@ e.g. with:
 ds9 -mosaic wcs skyflat*.fits
 ```
 ### Clean up working files to save disk space
+```
 rm To_*
 rm tmp*
 rm ssbtmp*
 rm mnah*
 rm blank*
+```
 
 # r-band
 ## Exposures
@@ -275,12 +277,13 @@ e.g. with:
 ds9 -mosaic wcs skyflat*.fits
 ```
 ### Clean up working files to save disk space
+```
 rm To_*
 rm tmp*
 rm ssbtmp*
 rm mnah*
 rm blank*
-
+```
 
 # i-band
 ## Exposures
@@ -346,11 +349,13 @@ e.g. with:
 ds9 -mosaic wcs skyflat*.fits
 ```
 ### Clean up working files to save disk space
+```
 rm To_*
 rm tmp*
 rm ssbtmp*
 rm mnah*
 rm blank*
+```
 
 # N-B-L816
 ## Exposures
@@ -389,8 +394,10 @@ ls -1 H*.fits > ovserscansub.lis
 overscansub.csh ovserscansub.lis
 ```
 ### Dome flat option (for N-B-L816):
+```
 ls -1 To_RH*.fits > mkflat.lis
 mask_mkflat_HA.csh mkflat.lis dome 0.4 1.3
+```
 
 ### Check that the flats look reasonable
 e.g. with:
@@ -399,8 +406,10 @@ e.g. with:
 ds9 -mosaic wcs dome*.fits
 ```
 ### Clean up working files to save disk space
+```
 rm To_*
 rm tmp*
 rm ssbtmp*
 rm mnah*
 rm blank*
+```
