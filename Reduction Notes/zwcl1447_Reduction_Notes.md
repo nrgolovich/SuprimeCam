@@ -464,8 +464,7 @@ Using the deepest band as the detection band.
 
 ```
 ln -s $gitdir/SuprimeCam/Astromatic/sext_scam_final.config .
-python $gitdir/SuprimeCam/python/run_sext_final_secondary.py ../$basename'_'$deepband'.fits' swarp_wmean.fits
-```
+python $gitdir/SuprimeCam/python/run_sext_final.py swarp_wmean.fits --detectfile ../$basename'_'$deepband'.fits'```
 Creates SExtractor catalog swarp_wmean.cat.
 
 ### Move the final files to parent folder
@@ -679,8 +678,9 @@ Using the deepest band as the detection band.
 
 ```
 ln -s $gitdir/SuprimeCam/Astromatic/sext_scam_final.config .
-python $gitdir/SuprimeCam/python/run_sext_final_secondary.py ../$basename'_'$deepband'.fits' swarp_wmean.fits
+python $gitdir/SuprimeCam/python/run_sext_final.py swarp_wmean.fits --detectfile ../$basename'_'$deepband'.fits'
 ```
+
 Creates SExtractor catalog swarp_wmean.cat.
 
 ### Move the final files to parent folder
