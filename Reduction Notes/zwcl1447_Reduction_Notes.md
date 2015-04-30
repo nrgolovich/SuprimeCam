@@ -55,6 +55,11 @@ Define the exposure time for the individual exposures in seconds.
 EXPTIME=360
 ```
 
+Define the zero point for this band.
+
+```
+zp=27.683
+```
 ## SDFRED Reduction Portion
 This portion of the pipeline uses SDFRED and the proceedure documented in its [manual](http://www.naoj.org/Observing/Instruments/SCam/sdfred/v2.0/sdfred2_2p1ae.pdf).
 
@@ -240,7 +245,7 @@ Correct the header information regarding exposure time and zero point.
 *make sure correct zero point is input as second argument*
 
 ```
-python $gitdir/SuprimeCam/python/fix_header_final.py swarp_wmean.fits 0
+python $gitdir/SuprimeCam/python/fix_header_final.py swarp_wmean.fits $zp
 ```
 
 ### Run SExtractor on the final coadd, using a filter-specific config file
@@ -273,6 +278,12 @@ Define the exposure time for the individual exposures in seconds.
 
 ```
 EXPTIME=180
+```
+
+Define the zero point for this band.
+
+```
+zp=27.368
 ```
 
 ## SDFRED Reduction Portion
@@ -456,7 +467,7 @@ Correct the header information regarding exposure time and zero point.
 *make sure correct zero point is input as second argument*
 
 ```
-python $gitdir/SuprimeCam/python/fix_header_final.py swarp_wmean.fits 0
+python $gitdir/SuprimeCam/python/fix_header_final.py swarp_wmean.fits $zp
 ```
 
 ### Run SExtractor on the final coadd, using a filter-specific config file
@@ -488,6 +499,12 @@ Define the exposure time for the individual exposures in seconds.
 
 ```
 EXPTIME=180
+```
+
+Define the zero point for this band.
+
+```
+zp=27.573
 ```
 
 ## SDFRED Reduction Portion
@@ -670,7 +687,7 @@ Correct the header information regarding exposure time and zero point.
 *make sure correct zero point is input as second argument*
 
 ```
-python $gitdir/SuprimeCam/python/fix_header_final.py swarp_wmean.fits 0
+python $gitdir/SuprimeCam/python/fix_header_final.py swarp_wmean.fits $zp
 ```
 
 ### Run SExtractor on the final coadd, using a filter-specific config file
