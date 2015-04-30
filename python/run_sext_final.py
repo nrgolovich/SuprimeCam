@@ -33,7 +33,7 @@ config = args.configfile
 
 # Check for zeropoint in fits file header
 try:
-    hdr = pf.getheader(scifile)
+    hdr = pf.getheader(imgfile)
 except:
     print ''
     print 'ERROR: Could not open header for fits file %s' % imgfile
@@ -57,18 +57,20 @@ print 'Photometry file:        %s' % imgfile
 print 'Photometry weight file: %s' % whtfile
 print 'Detection file:         %s' % detect_imgfile
 print 'Detection weight file:  %s' % detect_whtfile
-print 'Output catalog:         %s' % catfile
+print 'Output catalog:         %s' % outcat
 print 'Regions file:           %s' % regfile
-print 'Config file:            %s' % configfile
+print 'Config file:            %s' % config
 print 'Zeropoint:              %6.3f' % zeropoint
 print ''
 
 def make_sexcat(imgfile, outcat='tmp.cat', configfile='sext_scam.config', 
                 whtfile=None, weight_type='MAP_WEIGHT',
-                detectfile=None, detect_whtfile=None, 
+                detectfile=None, detect_whtfile=None, weight_thresh=None,
                 detect_weight_type='MAP_WEIGHT', regfile=None,
                 ncoadd=1, satur=50000., zeropt=None, catformat='ldac',
                 flag_file=None, det_thresh=-1, det_area=-1, seeing=0.0,
+                racol=None, deccol=None, fluxcol=None, 
+                fluxerrcol='fluxerr_auto',              
                 logfile=None, verbose=True):
     # get the gain and exposure time of the photomety image
     hdr = pf.getheader(imgfile)
@@ -112,7 +114,7 @@ def make_sexcat(imgfile, outcat='tmp.cat', configfile='sext_scam.config',
     elif whtfile is not None and detect_whtfile is None:    
         sopts += '-WEIGHT_TYPE %s -WEIGHT_IMAGE %s ' % (weight_type,whtfile)
     elif whtfile is not None and detect_whtfile is not None:
-        sopts += '-WEIGHT_TYPE {0},{1} -WEIGHT_IMAGE {2},{3} '.format(weight_type, detect_weight_type, whtfile, detect_whtfile)
+        sopts += '-WEIGHT_TYPE {0},{1} -WEIGHT_IMAGE {2},{3} '.format( detect_weight_type, weight_type, detect_whtfile, whtfile)
     else:
         print 'Error: specified detect_whtfile without whtfile, exiting.'
         sys.exit()
@@ -125,7 +127,7 @@ def make_sexcat(imgfile, outcat='tmp.cat', configfile='sext_scam.config',
         sopts += '-VERBOSE_TYPE QUIET '
     
     # Run SExtractor
-    print "length of fitsfile = {0}".format(len(fitsfile))
+    print "length of fitsfile = {0}".format(len(imgfile))
     if verbose:
         print ""
         if detectfile is None:
@@ -157,7 +159,7 @@ def make_sexcat(imgfile, outcat='tmp.cat', configfile='sext_scam.config',
                                                             logfile))
             except:
                 print ""
-                print "ERROR.  Could not run SExtractor on %s" % fitsfile
+                print "ERROR.  Could not run SExtractor on %s" % imgfile
                 print ""
                 return
     elif detectfile is not None:
@@ -169,7 +171,7 @@ def make_sexcat(imgfile, outcat='tmp.cat', configfile='sext_scam.config',
                                                           configfile,sopts))
             except:
                 print ""
-                print "ERROR.  Could not run SExtractor on %s" % fitsfile
+                print "ERROR.  Could not run SExtractor on %s" % imgfile
                 print ""
                 return
         else:
@@ -181,7 +183,7 @@ def make_sexcat(imgfile, outcat='tmp.cat', configfile='sext_scam.config',
                                                                 logfile)) 
             except:
                 print ""
-                print "ERROR.  Could not run SExtractor on %s" % fitsfile
+                print "ERROR.  Could not run SExtractor on %s" % imgfile
                 print ""
                 return
 
@@ -189,7 +191,7 @@ def make_sexcat(imgfile, outcat='tmp.cat', configfile='sext_scam.config',
         print ""
         if detectfile is None:
             print "Ran SExtractor in single band mode on %s to produce output catalog %s" % \
-                  (fitsfile,outcat)
+                  (imgfile,outcat)
         else:
             print "Ran SExtractor in dual band mode with:"
             print "    {0} as the detection band".format(detectfile)
@@ -217,7 +219,7 @@ def make_sexcat(imgfile, outcat='tmp.cat', configfile='sext_scam.config',
         print ""
 
 # call the make_sexcat function with user inputs
-make_sexcat(imgfile, outcat=catfile, configfile=configfile, 
+make_sexcat(imgfile, outcat=outcat, configfile=config, 
             whtfile=whtfile, weight_type='MAP_WEIGHT',
             detectfile=detect_imgfile, detect_whtfile=detect_whtfile, 
             detect_weight_type='MAP_WEIGHT', regfile=regfile,
