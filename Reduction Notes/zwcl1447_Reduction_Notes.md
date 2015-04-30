@@ -89,7 +89,7 @@ Generates To_RH*.fits files.
 The flat field images were created using the proceedure outlined in [2014A_Flats.md](https://github.com/MCTwo/SuprimeCam/blob/master/Reduction%20Notes/2014A_Flats.md).
 
 ```
-ln -s ../../flats/2014feb/$band'/skyflat*.fits' .
+ln -s ../../flats/2014feb/$band'/skyflat'*.fits .
 ls -1 skyflat*.fits > ffield_mf.lis
 ls -1 To_RH*.fits > ffield_im.lis
 ffield.csh ffield_mf.lis ffield_im.lis
@@ -475,7 +475,9 @@ Using the deepest band as the detection band.
 
 ```
 ln -s $gitdir/SuprimeCam/Astromatic/sext_scam_final.config .
-python $gitdir/SuprimeCam/python/run_sext_final.py swarp_wmean.fits --detectfile ../$basename'_'$deepband'.fits'```
+python $gitdir/SuprimeCam/python/run_sext_final.py swarp_wmean.fits --detectfile ../$basename'_'$deepband'.fits'
+```
+
 Creates SExtractor catalog swarp_wmean.cat.
 
 ### Move the final files to parent folder
