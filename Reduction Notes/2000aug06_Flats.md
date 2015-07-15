@@ -41,9 +41,28 @@ namechange.csh namechange.lis
 ls -1 H*.fits > ovserscansub.lis
 overscansub.csh ovserscansub.lis
 ```
+
 ### Skyflat option:
 ```
 ls -1 To_RH*.fits > mkflat.lis
+```
+Removed the following lines from mkflat.lis
+> To_RH000601object010_si001s.fits
+To_RH000601object010_si002s.fits
+To_RH000601object010_si005s.fits
+To_RH000601object010_si006s.fits
+To_RH000601object010_w67c1.fits
+To_RH000601object010_w6c1.fits
+To_RH000601object010_w93c2.fits
+To_RH000601object010_w9c2.fits
+
+For some reason I was getting the following error when running the mask_mkflat_HA.csh command:
+
+>imropen_fits: can't open mnahTo_RH000601object010_w9c2.fits
+ ERROR: Can't open mnahTo_RH000601object010_w9c2.fits. #8
+ Suffix of image must be either .pix or .fits.
+
+```
 mask_mkflat_HA.csh mkflat.lis skyflat_R 0.5 1.3
 ```
 ### Check that the flats look reasonable
@@ -65,7 +84,7 @@ rm blank*
 
 ## Run SDFRED flat pipeline
 ### Link to the raw data
-There are 99 separate exposures for the skyflat which should be sufficient.
+There are ~99 separate exposures for the skyflat which should be sufficient.
 
 ```
 cd I
@@ -100,3 +119,5 @@ rm ssbtmp*
 rm mnah*
 rm blank*
 ```
+There is a strange pattern on the w6c1 and w9c2 chips but I don't think
+it is necessarily due to the flatfielding process.

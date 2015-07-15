@@ -1,6 +1,6 @@
 This file lists the commands for reducing the Subaru data in chuncks that can be copy and pasted. Breaks are at locations where user input/action is require.
 
-Define the correct `$` parameters, e.g. `$basename` and `$deepband`. 
+Define the correct `$` parameters, e.g. `$basename` and `$deepband`.
 
 ## After linking to the raw data
 
@@ -36,6 +36,7 @@ ls object*fits | grep -v wht > good_frames_pass1.txt
 ## else if shallow band
 
 ```
+ln -s $gitdir/SuprimeCam/Astromatic/scamp_scam_pass2.config .
 scamp object*cat -c scamp_scam_pass2.config -ASTREFCAT_NAME ../$basename'_'$deepband'.cat'
 ls object*fits | grep -v wht > good_frames_pass1.txt
 ```
@@ -72,5 +73,3 @@ mv swarp_wmean_wht.fits ../$basename'_'$band'_wht.fits'
 mv swarp_wmean.cat ../$basename'_'$band'.cat'
 mv swarp_wmean.reg ../$basename'_'$band'.reg'
 ```
-
-
