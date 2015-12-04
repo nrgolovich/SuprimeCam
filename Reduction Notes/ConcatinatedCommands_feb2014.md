@@ -62,23 +62,24 @@ ds9 -tile swarp_wmean.fits -scale log -scale limits 0 100 -zoom to fit swarp_wme
 
 ## look at swarp images
 
+## If deep band.
 ```
 ln -s $gitdir/SuprimeCam/Astromatic/swarp_texp.config .
 python $gitdir/SuprimeCam/python/make_texp_map.py $EXPTIME $fieldcenter
 python $gitdir/SuprimeCam/python/fix_header_final.py swarp_wmean.fits $zp
 ln -s $gitdir/SuprimeCam/Astromatic/sext_scam_final.config .
-```
-
-If deep band.
-```
 python $gitdir/SuprimeCam/python/run_sext_final.py swarp_wmean.fits
 mv swarp_wmean.fits ../$basename'_'$band'.fits'
 mv swarp_wmean_wht.fits ../$basename'_'$band'_wht.fits'
 mv swarp_wmean.cat ../$basename'_'$band'.cat'
 mv swarp_wmean.reg ../$basename'_'$band'.reg'
 ```
-Else if shallow band.
+## Else if shallow band.
 ```
+ln -s $gitdir/SuprimeCam/Astromatic/swarp_texp.config .
+python $gitdir/SuprimeCam/python/make_texp_map.py $EXPTIME $fieldcenter
+python $gitdir/SuprimeCam/python/fix_header_final.py swarp_wmean.fits $zp
+ln -s $gitdir/SuprimeCam/Astromatic/sext_scam_final.config .
 python $gitdir/SuprimeCam/python/run_sext_final.py swarp_wmean.fits --detectfile ../$basename'_'$deepband'.fits'
 mv swarp_wmean.fits ../$basename'_'$band'.fits'
 mv swarp_wmean_wht.fits ../$basename'_'$band'_wht.fits'
