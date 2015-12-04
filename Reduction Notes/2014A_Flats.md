@@ -1,6 +1,6 @@
 These are the commands used to create the sky flats for the g, r, i broadband images. For the N-B-L816 band images we only observed one cluster and with just 4 exposures so we used dome flats for this band.
 
-The following are the list of files that should be used for creating skyflats. Note that I start off by listing all possible files for each band (not including the short 3 and 30 s exposures, since James recommends against using these), then I consider whether there are too many bright stars in each field. 
+The following are the list of files that should be used for creating skyflats. Note that I start off by listing all possible files for each band (not including the short 3 and 30 s exposures, since James recommends against using these), then I consider whether there are too many bright stars in each field.
 
 
 |Cluster	| Use for skyflat? |
@@ -16,12 +16,12 @@ The following are the list of files that should be used for creating skyflats. N
 |RXC J1053	| yes |
 |A1300		| yes |
 |PLCK G287	| yes |
-|ZwCL 1447	| yes | 
+|ZwCL 1447	| yes |
 |A2034		| yes |
 |A2061		| Yes |
 |MACS J1752	| Yes. There are some bright (V~10) stars in the field but not too bad. |
 
-Setup the flat folder architecture. 
+Setup the flat folder architecture.
 
 ```
 cd /sandbox/Subaru/flats
@@ -283,6 +283,7 @@ rm tmp*
 rm ssbtmp*
 rm mnah*
 rm blank*
+rm H*
 ```
 
 # i-band

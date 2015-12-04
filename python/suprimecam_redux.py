@@ -1,6 +1,6 @@
 """
 A set of functions that can be used for the latter part of the reduction
-of Subaru SuprimeCam data.  
+of Subaru SuprimeCam data.
 
 Note that the current approach is to use Subaru's SDFRED pipeline for the
 following steps:
@@ -57,7 +57,7 @@ def make_wht_for_swarp(infiles, mingood=-100, outext='_wht_init'):
     a value of -2^15 = -32768.  However, there are other bad pixels with
     slightly different values, perhaps because of the flat-fielding.
     Therefore, create the weight file using the following algorithm:
-    
+
        wht=1  for all pixels with values => mingood
        wht=0  for all pixels with values < mingood
 
@@ -129,7 +129,7 @@ def make_wht_for_swarp(infiles, mingood=-100, outext='_wht_init'):
 #---------------------------------------------------------------------------
 
 def make_wht_for_final(infiles, medfile, nsig, inwht_suff='.weight.fits',
-                       outwht_suff='_wht.fits', flag_posonly=False, 
+                       outwht_suff='_wht.fits', flag_posonly=False,
                        medwhtfile='default'):
     """
     Creates a weight file for each input image to a final swarp call.
@@ -140,7 +140,7 @@ def make_wht_for_final(infiles, medfile, nsig, inwht_suff='.weight.fits',
 
     Inputs:
        infiles      - list of individual input fits files that will be compared
-                       to the median stack.  These will probably be called 
+                       to the median stack.  These will probably be called
                        *resamp.fits
        medfile      - median-stacked fits file
        nsig         - minimum sigma difference between an individual input image
@@ -279,8 +279,8 @@ def make_wht_for_final(infiles, medfile, nsig, inwht_suff='.weight.fits',
         x2 = int(x1[i] + indat.shape[1])
         y2 = int(y1[i] + indat.shape[0])
 
-        """ 
-        Make the cutout of the median-stack image and then take the 
+        """
+        Make the cutout of the median-stack image and then take the
         difference between this file and the scaled input individual file
         """
         #meddat = (pf.getdata(medfile))[y1[i]:y2,x1[i]:x2]
@@ -296,7 +296,7 @@ def make_wht_for_final(infiles, medfile, nsig, inwht_suff='.weight.fits',
         diff[whtmask] = indat[whtmask] * fscal[i] - meddat[whtmask]
         del whtmask
 
-        """ 
+        """
         Get an estimate of the RMS noise in the data.  Since we are creating
         a difference, indat - meddat, the final rms will be
             sigma_diff^2 = sigma_ind^2 + sigma_med^2
@@ -309,11 +309,11 @@ def make_wht_for_final(infiles, medfile, nsig, inwht_suff='.weight.fits',
                 This is because sigma_ADU^2 = ADU/gain, assuming that
                 N_e = gain * ADU is a Poisson process.
 
-            sigma_med^2 = (1. / medwht) + [for SNR>1: meddat/gain] 
+            sigma_med^2 = (1. / medwht) + [for SNR>1: meddat/gain]
               - Swarp produces an inverse-variance weight map
                 NOTE: However, this does NOT include Poisson noise from the
                 objects in the image.  This is because computes this Poisson
-                noise when it does its object detections, and therefore 
+                noise when it does its object detections, and therefore
                 expects any input weight file to not include the Poisson noise.
 
         """
@@ -335,8 +335,8 @@ def make_wht_for_final(infiles, medfile, nsig, inwht_suff='.weight.fits',
         rms = n.sqrt(medvar + indvar)
         del medvar,indvar,mask,indat
 
-        """ 
-        Flag pixels that deviate by more than nsig sigma from the 
+        """
+        Flag pixels that deviate by more than nsig sigma from the
         median-stacked image
         """
         print 'Flagging pixels that differ by more than %d sigma from median'\
@@ -397,7 +397,7 @@ def fix_final_headers(scifile, texpfile, zeropoint, indext='resamp.fits'):
     ** NOTE: However, the make_cat_suprimecam function in astromatic.py
        takes care of the multiplication by the exposure time.  Therefore,
        set GAIN to just the mean gain.
-    
+
     """
 
     """ Get mean gain """
