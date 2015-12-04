@@ -26,5 +26,5 @@ rm swarp_median.fits
 rm swarp_median_wht.fits
 rm swarp_wmean_texp.fits
 rm texp_wht.fits
-rm tmp
+rm tmp*
 ```
