@@ -12,19 +12,20 @@ Of course the raw files should also be kept!
 The following commands remove the unnecessary files.
 
 ```
-rm AgfTo*.fits
+rm AgfTo*
 rm gfTo*.fits
 rm fTo*.fits
 rm To*.fits
 rm object*.cat
 rm object*.reg
 rm object*.head
-rm object*.texp.fits
+rm object*texp.fits
 rm object*.weight.fits
 rm object*wht_init.fits
-rm swarp_median.fits
-rm swarp_median_wht.fits
 rm swarp_wmean_texp.fits
 rm texp_wht.fits
 rm tmp*
 ```
+I actually think it is good to keep these files.
+rm swarp_median.fits
+rm swarp_median_wht.fits
