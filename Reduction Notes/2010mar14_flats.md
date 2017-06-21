@@ -12,20 +12,16 @@ The following are the list of files that should be used for creating skyflats. N
 |ABELL1423	| yes |
 
 The raw data for the flats are stored in /sandbox/Subaru/flats/2010mar/rawdata, and the sdfred2 pipeline will be run in the directories named according to filter. 
-```
 
 #V band 
 
-```
-
 Will already made the flats for this filter. Note these are not the same as the raw data, so would need to remake using that data since we don't have the data anywhere.
-
-```
 
 # i-band
 
 ## Run SDFRED flat pipeline
 ### Link to the raw data
+
 This will give 41 separate exposures for the skyflat which should be sufficient (after excluding the grayed out exposures).
 
 ```
